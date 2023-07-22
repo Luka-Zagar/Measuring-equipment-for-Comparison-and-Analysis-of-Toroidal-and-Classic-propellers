@@ -3,8 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/.pio/libdeps/esp32doit-devkit-v1/HX711/src"
+                "${workspaceFolder}/**"
             ],
             "defines": [],
             "macFrameworkPath": [],
