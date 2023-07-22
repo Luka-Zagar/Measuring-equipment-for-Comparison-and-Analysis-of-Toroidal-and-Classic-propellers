@@ -13,7 +13,6 @@ HX711 scale;
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("HX711 Demo");
   Serial.println("Initializing the scale");
 
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
