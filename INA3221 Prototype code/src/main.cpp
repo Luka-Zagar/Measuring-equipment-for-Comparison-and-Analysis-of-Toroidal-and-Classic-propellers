@@ -6,7 +6,7 @@
 #include <Wire.h>
 #include <SDL_Arduino_INA3221.h>
 
-#define CHANNEL_1 1
+#define INA3221_CHANNEL_1 1
 
 SDL_Arduino_INA3221 ina3221(INA3221_ADDRESS, 0.004F);
 
@@ -25,9 +25,9 @@ void loop() {
   float loadvoltage1 = 0;
   float power1 = 0;
   
-  busvoltage1 = ina3221.getBusVoltage_V(CHANNEL_1);
-  shuntvoltage1 = ina3221.getShuntVoltage_mV(CHANNEL_1);
-  current_mA1 = ina3221.getCurrent_mA(CHANNEL_1);  // [- means the battery is charging, + that it is discharging]
+  busvoltage1 = ina3221.getBusVoltage_V(INA3221_CHANNEL_1);
+  shuntvoltage1 = ina3221.getShuntVoltage_mV(INA3221_CHANNEL_1);
+  current_mA1 = ina3221.getCurrent_mA(INA3221_CHANNEL_1);  // [- means the battery is charging, + that it is discharging]
   
   loadvoltage1 = busvoltage1 + (shuntvoltage1 / 1000);
   power1 = loadvoltage1 * (current_mA1 / 1000);
