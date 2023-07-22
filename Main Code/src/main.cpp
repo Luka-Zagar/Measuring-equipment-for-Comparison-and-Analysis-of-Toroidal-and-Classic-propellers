@@ -6,8 +6,12 @@
 #include <Wire.h>
 #include <SDL_Arduino_INA3221.h>
 #include <HX711.h>
+#include <DHT.h>
 
 #define INA3221_CHANNEL_1 1
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
 
 const int LOADCELL_DOUT_PIN = 25;
 const int LOADCELL_SCK_PIN = 26;
@@ -24,12 +28,16 @@ float power1;
 float scale_reading;
 float scale_reading_average;
 
+float humidity;
+float temperature;
+float heat_index;
+
 int SignalValue;
 int MotorPower;
 
 SDL_Arduino_INA3221 ina3221(INA3221_ADDRESS, 0.004F);
 HX711 scale;
-
+DHT dht(DHTPIN, DHTTYPE);
 
 void INA3221_setup() {
   ina3221.begin();
@@ -77,8 +85,20 @@ void PWM_update() {
   MotorPower = map(SignalValue, 1000, 2000, 0, 100);
 }
 
-void SENSORS_dataprint() {
+void DHT22_update() {
+  humidity = dht.readHumidity();
+  temperature = dht.readTemperature();    // Read temperature as Celsius (the default)
 
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
+
+  heat_index = dht.computeHeatIndex(temperature, humidity, false);
+}
+
+void SENSORS_dataprint() {
   Serial.print("Bus Voltage: ");    Serial.print(busvoltage1);    Serial.print(" V \t");
   Serial.print("Load Voltage: ");   Serial.print(loadvoltage1);   Serial.print(" V \t");
   Serial.print("Shunt Voltage: ");  Serial.print(shuntvoltage1);  Serial.print(" mV \t");
@@ -89,12 +109,18 @@ void SENSORS_dataprint() {
   Serial.print("Power in %: ");     Serial.print(MotorPower);     Serial.print(" % \t");
 
   Serial.print("One reading: ");    Serial.print(scale_reading);            Serial.print(" g \t");
-  Serial.print("Average: ");        Serial.print(scale_reading_average);    Serial.println(" g \t");
+  Serial.print("Average: ");        Serial.print(scale_reading_average);    Serial.print(" g \t");
+
+  Serial.print("Humidity: ");       Serial.print(humidity);       Serial.print(" % \t");
+  Serial.print("Temperature: ");     Serial.print(temperature);   Serial.print(" °C \t");
+  Serial.print("Heat index: ");      Serial.print(heat_index);    Serial.println(" °C");
 }
 
 void setup() {
   Serial.begin(115200);
   pinMode(MOTOR_SIGNAL_PIN, INPUT);
+  
+  dht.begin();
 
   INA3221_setup();
   LOADCELL_setup();
@@ -104,6 +130,7 @@ void loop() {
   INA3221_update();
   LOADCELL_update();
   PWM_update();
+  DHT22_update();
 
   SENSORS_dataprint();
 }
