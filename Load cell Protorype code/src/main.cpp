@@ -33,6 +33,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.print("One reading: ");  Serial.print(scale.get_units(), 1);     Serial.print(" g \t");
-  Serial.print("Average: ");      Serial.print(scale.get_units(10), 5);   Serial.println(" g \t");
+  Serial.print("One reading: ");    Serial.print(scale.get_units(), 1);     Serial.print(" g \t");
+  Serial.print("Average: ");        Serial.print(scale.get_units(10), 5);   Serial.println(" g \t");
 }

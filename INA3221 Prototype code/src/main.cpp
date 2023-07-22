@@ -27,14 +27,14 @@ void loop() {
   
   busvoltage1 = ina3221.getBusVoltage_V(CHANNEL_1);
   shuntvoltage1 = ina3221.getShuntVoltage_mV(CHANNEL_1);
-  current_mA1 = ina3221.getCurrent_mA(CHANNEL_1);  // (- means the battery is charging, + that it is discharging)
+  current_mA1 = ina3221.getCurrent_mA(CHANNEL_1);  // [- means the battery is charging, + that it is discharging]
   
   loadvoltage1 = busvoltage1 + (shuntvoltage1 / 1000);
   power1 = loadvoltage1 * (current_mA1 / 1000);
 
-  Serial.print("Bus Voltage: "); Serial.print(busvoltage1); Serial.print(" V \t");
-  Serial.print("Load Voltage: "); Serial.print(loadvoltage1); Serial.print(" V \t");
-  Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage1); Serial.print(" mV \t");
-  Serial.print("Current: "); Serial.print(current_mA1); Serial.print(" mA \t");
-  Serial.print("Power: "); Serial.print(power1); Serial.println(" W \t");
+  Serial.print("Bus Voltage: ");    Serial.print(busvoltage1);    Serial.print(" V \t");
+  Serial.print("Load Voltage: ");   Serial.print(loadvoltage1);   Serial.print(" V \t");
+  Serial.print("Shunt Voltage: ");  Serial.print(shuntvoltage1);  Serial.print(" mV \t");
+  Serial.print("Current: ");        Serial.print(current_mA1);    Serial.print(" mA \t");
+  Serial.print("Power: ");          Serial.print(power1);         Serial.println(" W \t");
 }
