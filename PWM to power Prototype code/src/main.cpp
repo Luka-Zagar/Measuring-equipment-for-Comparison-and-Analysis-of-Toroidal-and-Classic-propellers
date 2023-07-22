@@ -1,3 +1,7 @@
+// PWM Read on ESP32 Test Code
+// Version 1.0
+// Luka Žagar   22 July 2023
+
 #include <Arduino.h>
 
 #define SIGNALPIN_1 2
