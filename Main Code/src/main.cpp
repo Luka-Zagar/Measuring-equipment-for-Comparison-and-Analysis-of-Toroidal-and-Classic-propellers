@@ -95,7 +95,7 @@ void DHT22_update() {
   heat_index = dht.computeHeatIndex(temperature, humidity, false);
 }
 
-void dataprint() {
+void VISUAL_dataprint() {
   Serial.print("Bus Voltage: ");    Serial.print(busvoltage1);    Serial.print(" V     ");
   Serial.print("Load Voltage: ");   Serial.print(loadvoltage1);   Serial.print(" V     ");
   Serial.print("Shunt Voltage: ");  Serial.print(shuntvoltage1);  Serial.print(" mV     ");
@@ -111,6 +111,23 @@ void dataprint() {
   Serial.print("Temperature: ");    Serial.print(temperature);    Serial.print(" °C     ");
   Serial.print("Heat index: ");     Serial.print(heat_index);     Serial.println(" °C");
 }
+
+void COMPACT_dataprint() {
+  Serial.print(busvoltage1);            Serial.print(";");
+  Serial.print(loadvoltage1);           Serial.print(";");
+  Serial.print(shuntvoltage1);          Serial.print(";");
+  Serial.print(current1);               Serial.print(";");
+  Serial.print(power1);                 Serial.print(";");
+
+  Serial.print(SignalValue);            Serial.print(";");
+  Serial.print(MotorPower);             Serial.print(";");
+
+  Serial.print(scale.get_units(), 1);   Serial.print(";");
+
+  Serial.print(humidity);               Serial.print(";");
+  Serial.print(temperature);            Serial.print(";");
+  Serial.println(heat_index);
+}  
 
 void setup() {
   Serial.begin(250000);
@@ -128,5 +145,6 @@ void loop() {
   PWM_update();
   DHT22_update();
 
-  dataprint();
+  VISUAL_dataprint();     //to visualize the data
+  //COMPACT_dataprint();  //to collect data for later research
   }
