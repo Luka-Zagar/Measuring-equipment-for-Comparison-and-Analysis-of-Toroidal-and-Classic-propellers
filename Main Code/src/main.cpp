@@ -22,6 +22,7 @@ float busvoltage1;
 float current1;
 float loadvoltage1;
 float power1;
+int current_cal_factor = 43;
 
 float scale_reading;
 float scale_reading_average;
@@ -33,7 +34,7 @@ float heat_index;
 int SignalValue;
 int MotorPower;
 
-SDL_Arduino_INA3221 ina3221(INA3221_ADDRESS, 0.004F);
+SDL_Arduino_INA3221 ina3221(INA3221_ADDRESS, 0.0039F);
 HX711 scale;
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -67,7 +68,8 @@ void LOADCELL_setup() {
 void INA3221_update() {
   busvoltage1 = ina3221.getBusVoltage_V(INA3221_CHANNEL_1);
   shuntvoltage1 = ina3221.getShuntVoltage_mV(INA3221_CHANNEL_1);
-  current1 = ina3221.getCurrent_mA(INA3221_CHANNEL_1);  // [- means the battery is charging, + that it is discharging]
+  int current_correction = 
+  current1 = (ina3221.getCurrent_mA(INA3221_CHANNEL_1) - current_cal_factor + current_correction);  // [- means the battery is charging, + that it is discharging]
   
   loadvoltage1 = busvoltage1 + (shuntvoltage1 / 1000);
   power1 = loadvoltage1 * (current1 / 1000);
@@ -130,7 +132,7 @@ void COMPACT_dataprint() {
 }  
 
 void setup() {
-  Serial.begin(250000);
+  Serial.begin(1000000);
   pinMode(MOTOR_SIGNAL_PIN, INPUT);
   
   dht.begin();
@@ -145,6 +147,6 @@ void loop() {
   PWM_update();
   DHT22_update();
 
-  VISUAL_dataprint();     //to visualize the data
-  //COMPACT_dataprint();  //to collect data for later research
+  //VISUAL_dataprint();     //to visualize the data
+  COMPACT_dataprint();  //to collect data for later research
   }
