@@ -17,8 +17,6 @@ const int LOADCELL_DOUT_PIN = 25;
 const int LOADCELL_SCK_PIN = 26;
 const int MOTOR_SIGNAL_PIN = 2;
 
-const float SCALE_CALIBRATION = 87.7;
-
 float shuntvoltage1;
 float busvoltage1;
 float current1;
@@ -56,7 +54,7 @@ void LOADCELL_setup() {
   Serial.print("Get value: ");      Serial.print(scale.get_value(5)); // print the average of 5 readings from the ADC minus the tare weight (not set yet)
   Serial.print("Get units: ");      Serial.println(scale.get_units(5), 1); // print the average of 5 readings from the ADC minus tare weight (not set) divided
             
-  scale.set_scale(SCALE_CALIBRATION);  // this value is obtained by calibrating the scale with known weights
+  scale.set_scale(87.7);  // this value is obtained by calibrating the scale with known weights
   scale.tare(); // reset the scale to 0
 
   Serial.println("After setting up the scale:");
@@ -75,10 +73,9 @@ void INA3221_update() {
   power1 = loadvoltage1 * (current1 / 1000);
 }
 
-void LOADCELL_update() {
-  scale_reading = (scale.get_units(), 1);
-  scale_reading_average = (scale.get_units(10), 5);
-  }
+// void LOADCELL_update() {
+//   scale_reading = (scale.get_units(), 1);
+//   }
 
 void PWM_update() {
   SignalValue = pulseIn(MOTOR_SIGNAL_PIN, HIGH);
@@ -98,30 +95,25 @@ void DHT22_update() {
   heat_index = dht.computeHeatIndex(temperature, humidity, false);
 }
 
-void SENSORS_dataprint() {
-  //Serial.print(busvoltage1);           Serial.print(";");
-  //Serial.print(loadvoltage1);          Serial.print(";");
-  //Serial.print(shuntvoltage1);         Serial.print(";");
-  //Serial.print(current1);              Serial.print(";");
-  //Serial.print(power1);                Serial.print(";");
+void dataprint() {
+  Serial.print("Bus Voltage: ");    Serial.print(busvoltage1);    Serial.print(" V     ");
+  Serial.print("Load Voltage: ");   Serial.print(loadvoltage1);   Serial.print(" V     ");
+  Serial.print("Shunt Voltage: ");  Serial.print(shuntvoltage1);  Serial.print(" mV     ");
+  Serial.print("Current: ");        Serial.print(current1);       Serial.print(" mA     ");
+  Serial.print("Power: ");          Serial.print(power1);         Serial.print(" W     ");
 
-  //Serial.print(SignalValue);           Serial.print(";");
-  //Serial.print(MotorPower);            Serial.print(";");
+  Serial.print("PWM Signal: ");     Serial.print(SignalValue);    Serial.print(" ms     ");
+  Serial.print("Power in %: ");     Serial.print(MotorPower);     Serial.print(" %     ");
 
-  //Serial.print(scale_reading);          Serial.print(";");
-  //Serial.print(scale_reading_average);  Serial.println(";");
+  Serial.print("One reading: ");    Serial.print(scale.get_units(), 1);  Serial.print(" g     ");
 
-  //Serial.print(humidity);               Serial.print(";");
-  //Serial.print(temperature);            Serial.println(";");
-  //Serial.print(heat_index);             Serial.println(";");
-
-  char printline[100];
-  sprintf(printline, "%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f", busvoltage1, loadvoltage1, shuntvoltage1, current1, power1, SignalValue, MotorPower, scale_reading, scale_reading_average, humidity, temperature, heat_index);
-  Serial.println(printline);
+  Serial.print("Humidity: ");       Serial.print(humidity);       Serial.print(" %     ");
+  Serial.print("Temperature: ");    Serial.print(temperature);    Serial.print(" °C     ");
+  Serial.print("Heat index: ");     Serial.print(heat_index);     Serial.println(" °C");
 }
 
 void setup() {
-  Serial.begin(500000);
+  Serial.begin(250000);
   pinMode(MOTOR_SIGNAL_PIN, INPUT);
   
   dht.begin();
@@ -132,9 +124,9 @@ void setup() {
 
 void loop() {
   INA3221_update();
-  LOADCELL_update();
+  //LOADCELL_update();
   PWM_update();
   DHT22_update();
 
-  SENSORS_dataprint();
-}
+  dataprint();
+  }
