@@ -5,7 +5,7 @@
 #include <Arduino.h>
 #include <DHT.h>
 
-#define DHTPIN 2
+#define DHTPIN 23
 #define DHTTYPE DHT22
 
 float humidity;
@@ -15,7 +15,7 @@ float heat_index;
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(250000);
   dht.begin();
 }
 

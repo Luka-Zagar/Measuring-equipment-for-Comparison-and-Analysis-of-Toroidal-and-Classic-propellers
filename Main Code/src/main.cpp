@@ -10,7 +10,7 @@
 
 #define INA3221_CHANNEL_1 1
 
-#define DHTPIN 4
+#define DHTPIN 23
 #define DHTTYPE DHT22
 
 const int LOADCELL_DOUT_PIN = 25;
@@ -99,25 +99,29 @@ void DHT22_update() {
 }
 
 void SENSORS_dataprint() {
-  Serial.print("Bus Voltage: ");    Serial.print(busvoltage1);    Serial.print(" V \t");
-  Serial.print("Load Voltage: ");   Serial.print(loadvoltage1);   Serial.print(" V \t");
-  Serial.print("Shunt Voltage: ");  Serial.print(shuntvoltage1);  Serial.print(" mV \t");
-  Serial.print("Current: ");        Serial.print(current1);       Serial.print(" mA \t");
-  Serial.print("Power: ");          Serial.print(power1);         Serial.print(" W \t");
+  //Serial.print(busvoltage1);           Serial.print(";");
+  //Serial.print(loadvoltage1);          Serial.print(";");
+  //Serial.print(shuntvoltage1);         Serial.print(";");
+  //Serial.print(current1);              Serial.print(";");
+  //Serial.print(power1);                Serial.print(";");
 
-  Serial.print("PWM Signal: ");     Serial.print(SignalValue);    Serial.print("\t");
-  Serial.print("Power in %: ");     Serial.print(MotorPower);     Serial.print(" % \t");
+  //Serial.print(SignalValue);           Serial.print(";");
+  //Serial.print(MotorPower);            Serial.print(";");
 
-  Serial.print("One reading: ");    Serial.print(scale_reading);            Serial.print(" g \t");
-  Serial.print("Average: ");        Serial.print(scale_reading_average);    Serial.print(" g \t");
+  //Serial.print(scale_reading);          Serial.print(";");
+  //Serial.print(scale_reading_average);  Serial.println(";");
 
-  Serial.print("Humidity: ");       Serial.print(humidity);       Serial.print(" % \t");
-  Serial.print("Temperature: ");     Serial.print(temperature);   Serial.print(" °C \t");
-  Serial.print("Heat index: ");      Serial.print(heat_index);    Serial.println(" °C");
+  //Serial.print(humidity);               Serial.print(";");
+  //Serial.print(temperature);            Serial.println(";");
+  //Serial.print(heat_index);             Serial.println(";");
+
+  char printline[100];
+  sprintf(printline, "%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f", busvoltage1, loadvoltage1, shuntvoltage1, current1, power1, SignalValue, MotorPower, scale_reading, scale_reading_average, humidity, temperature, heat_index);
+  Serial.println(printline);
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(500000);
   pinMode(MOTOR_SIGNAL_PIN, INPUT);
   
   dht.begin();

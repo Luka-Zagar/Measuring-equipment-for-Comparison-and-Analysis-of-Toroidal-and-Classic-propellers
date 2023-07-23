@@ -11,7 +11,7 @@
 SDL_Arduino_INA3221 ina3221(INA3221_ADDRESS, 0.004F);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(250000);
   ina3221.begin();
 
   int MID = ina3221.getManufID();
