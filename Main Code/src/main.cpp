@@ -16,6 +16,7 @@
 const int LOADCELL_DOUT_PIN = 25;
 const int LOADCELL_SCK_PIN = 26;
 const int MOTOR_SIGNAL_PIN = 2;
+const int START_RAMPUP_PIN = 14;
 
 float shuntvoltage1;
 float busvoltage1;
@@ -98,6 +99,7 @@ void DHT22_update() {
 }
 
 void VISUAL_dataprint() {
+  Serial.print("Milliseconds");     Serial.print(millis());       Serial.print(" ms     ");
   Serial.print("Bus Voltage: ");    Serial.print(busvoltage1);    Serial.print(" V     ");
   Serial.print("Load Voltage: ");   Serial.print(loadvoltage1);   Serial.print(" V     ");
   Serial.print("Shunt Voltage: ");  Serial.print(shuntvoltage1);  Serial.print(" mV     ");
@@ -115,30 +117,33 @@ void VISUAL_dataprint() {
 }
 
 void COMPACT_dataprint() {
-  Serial.print(busvoltage1);            Serial.print(";");
-  Serial.print(loadvoltage1);           Serial.print(";");
-  Serial.print(shuntvoltage1);          Serial.print(";");
-  Serial.print(current1);               Serial.print(";");
-  Serial.print(power1);                 Serial.print(";");
+  Serial.print(millis());               Serial.print(",");
+  Serial.print(busvoltage1);            Serial.print(",");
+  Serial.print(loadvoltage1);           Serial.print(",");
+  Serial.print(shuntvoltage1);          Serial.print(",");
+  Serial.print(current1);               Serial.print(",");
+  Serial.print(power1);                 Serial.print(",");
 
-  Serial.print(SignalValue);            Serial.print(";");
-  Serial.print(MotorPower);             Serial.print(";");
+  Serial.print(SignalValue);            Serial.print(",");
+  Serial.print(MotorPower);             Serial.print(",");
 
-  Serial.print(scale.get_units(), 1);   Serial.print(";");
+  Serial.print(scale.get_units(), 1);   Serial.print(",");
 
-  Serial.print(humidity);               Serial.print(";");
-  Serial.print(temperature);            Serial.print(";");
+  Serial.print(humidity);               Serial.print(",");
+  Serial.print(temperature);            Serial.print(",");
   Serial.println(heat_index);
 }  
 
 void setup() {
   Serial.begin(1000000);
   pinMode(MOTOR_SIGNAL_PIN, INPUT);
+  pinMode(START_RAMPUP_PIN, OUTPUT);
   
   dht.begin();
 
   INA3221_setup();
   LOADCELL_setup();
+  digitalWrite(START_RAMPUP_PIN, HIGH);
 }
 
 void loop() {
